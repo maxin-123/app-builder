@@ -80,7 +80,7 @@ function Insights() {
                 <CartesianGrid vertical={false} stroke="var(--border)" />
                 <XAxis dataKey="label" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis fontSize={12} tickLine={false} axisLine={false} width={70} tickFormatter={(v) => money(v, cur)} />
-                <Tooltip formatter={(v: number) => `${money(v, cur)}/h`} />
+                <Tooltip formatter={(v) => `${money(Number(v), cur)}/h`} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
                 <Line type="monotone" dataKey="productVelocity" name="Product" stroke="var(--chart-1)" strokeWidth={2} dot={false} />
                 <Line type="monotone" dataKey="portfolioVelocity" name="Portfolio" stroke="var(--chart-3)" strokeWidth={2} dot={false} />
@@ -91,7 +91,7 @@ function Insights() {
                 <CartesianGrid vertical={false} stroke="var(--border)" />
                 <XAxis dataKey="label" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis fontSize={12} tickLine={false} axisLine={false} width={80} tickFormatter={(v) => money(v, cur)} />
-                <Tooltip formatter={(v: number) => money(v, cur)} />
+                <Tooltip formatter={(v) => money(Number(v), cur)} />
                 <Line type="monotone" dataKey="profit" name="Profit" stroke="var(--chart-1)" strokeWidth={2} dot={false} />
               </LineChart>
             </ChartBox>

@@ -13,7 +13,7 @@ export function EditCell({
   format,
 }: {
   value: string | number | null | undefined;
-  onSave: (v: string) => void | Promise<void>;
+  onSave: (v: string) => unknown;
   type?: "number" | "text";
   disabled?: boolean;
   className?: string;

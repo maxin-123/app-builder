@@ -51,7 +51,7 @@ function Overview() {
                 <CartesianGrid vertical={false} stroke="var(--border)" />
                 <XAxis dataKey="name" tickLine={false} axisLine={false} fontSize={12} />
                 <YAxis unit="%" tickLine={false} axisLine={false} fontSize={12} />
-                <Tooltip formatter={(v: number) => `${v.toFixed(0)}%`} />
+                <Tooltip formatter={(v) => `${Number(v).toFixed(0)}%`} />
                 <ReferenceLine y={100} stroke="var(--muted-foreground)" strokeDasharray="4 4" />
                 <Bar dataKey="utilization" radius={[4, 4, 0, 0]}>
                   {chart.map((c) => (

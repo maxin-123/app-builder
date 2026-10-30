@@ -22,10 +22,10 @@ export interface Me {
   company: Tables<"companies">;
 }
 
-async function must<T>(p: PromiseLike<{ data: T | null; error: { message: string } | null }>): Promise<T> {
+async function must<T>(p: PromiseLike<{ data: T; error: { message: string } | null }>): Promise<NonNullable<T>> {
   const { data, error } = await p;
   if (error) throw new Error(error.message);
-  return data as T;
+  return data as NonNullable<T>;
 }
 
 export function useMe() {
@@ -35,7 +35,7 @@ export function useMe() {
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) throw new Error("Not signed in");
       const profile = await must(supabase.from("profiles").select("*").eq("user_id", u.user.id).single());
-      const role = await must(supabase.from("user_roles").select("role").eq("user_id", u.user.id).maybeSingle());
+      const { data: role } = await supabase.from("user_roles").select("role").eq("user_id", u.user.id).maybeSingle();
       const company = await must(supabase.from("companies").select("*").eq("id", profile.company_id).single());
       return {
         userId: u.user.id,

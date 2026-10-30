@@ -141,7 +141,7 @@ function GroupsTab({ data, ev }: { data: CompanyData; ev: Evaluation | null }) {
   async function addGroup() {
     const { supabase } = await import("@/integrations/supabase/client");
     const { data: g, error } = await supabase.from("machine_groups").insert({ name: "New group" }).select().single();
-    if (error || !g) return db.run(Promise.resolve({ error: error ?? { message: "Could not add group" } }));
+    if (error || !g) { await db.run(Promise.resolve({ error: error ?? { message: "Could not add group" } })); return; }
     await db.insert("machines", { group_id: g.id, name: "Machine 1", hours_per_period: 160, efficiency: 0.85 }, "Group added");
   }
 
