@@ -1,0 +1,3 @@
+revoke execute on function public.set_updated_at(), public.audit_trigger(), public.audit_company(), public.protect_last_admin(), public.audit_roles(), public.guard_scenario(), public.guard_scenario_inputs(), public.handle_new_user(), public.seed_demo(uuid, uuid) from public, anon, authenticated;
+revoke execute on function public.current_company_id(), public.user_company_id(uuid), public.has_role(uuid, public.app_role), public.can_edit(), public.is_admin(), public.log_event(text, jsonb) from public, anon;
+grant execute on function public.current_company_id(), public.user_company_id(uuid), public.has_role(uuid, public.app_role), public.can_edit(), public.is_admin(), public.log_event(text, jsonb) to authenticated;
