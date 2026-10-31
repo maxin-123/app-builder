@@ -58,6 +58,7 @@ function ScenariosPage() {
 
   const [draft, setDraft] = useState<EngineScenario | null>(null);
   const [newOpen, setNewOpen] = useState(false);
+  const [newPreset, setNewPreset] = useState<{ base: string; label: string; volumes?: Record<string, number>; adjustments?: EngineScenario } | null>(null);
   const [optOpen, setOptOpen] = useState(false);
   useEffect(() => setDraft(null), [scenarioId]);
   useEffect(() => {
@@ -75,13 +76,17 @@ function ScenariosPage() {
   const tab = search.tab ?? "workspace";
 
   async function createScenario(o: { name: string; label: string; base: string | null; volumes?: Record<string, number>; adjustments?: EngineScenario }) {
-    const src = data!.inputs.find((i) => i.scenario_id === o.base);
+    if (!data || !o.name.trim()) return false;
+    const src = data.inputs.find((i) => i.scenario_id === o.base);
     const { data: s, error } = await supabase
       .from("scenarios")
-      .insert({ name: o.name, version_label: o.label as (typeof LABELS)[number], base_scenario_id: o.base })
+      .insert({ name: o.name.trim(), version_label: o.label as (typeof LABELS)[number], base_scenario_id: o.base })
       .select()
       .single();
-    if (error || !s) return toast.error(error?.message ?? "Could not create scenario");
+    if (error || !s) {
+      toast.error(error?.message ?? "Could not save scenario");
+      return false;
+    }
     const { error: e2 } = await supabase.from("scenario_inputs").insert({
       scenario_id: s.id,
       volumes: (o.volumes ?? src?.volumes ?? {}) as Json,
@@ -89,10 +94,15 @@ function ScenariosPage() {
       adjustments: (o.adjustments ?? src?.adjustments ?? {}) as Json,
       pinned_group_id: src?.pinned_group_id ?? null,
     });
-    if (e2) return toast.error(e2.message);
+    if (e2) {
+      await supabase.from("scenarios").delete().eq("id", s.id);
+      toast.error(e2.message);
+      return false;
+    }
     await refresh();
     setScenarioId(s.id);
     toast.success(`Created “${o.name}”`);
+    return true;
   }
 
   const saveInputs = (patch: Record<string, unknown>, ok?: string) => (input ? db.update("scenario_inputs", input.id, patch, ok) : Promise.resolve(false));
@@ -118,12 +128,12 @@ function ScenariosPage() {
         actions={
           <>
             <ShiftBadge shift={a.shift} />
-            {canEdit && <Button size="sm" onClick={() => setNewOpen(true)}><Plus className="mr-1 h-4 w-4" /> New scenario</Button>}
+            {canEdit && <Button size="sm" onClick={() => { setNewPreset(null); setNewOpen(true); }}><Plus className="mr-1 h-4 w-4" /> New scenario</Button>}
             {canEdit && a.run && <Button size="sm" variant="outline" onClick={() => setOptOpen(true)}><Sparkles className="mr-1 h-4 w-4" /> Optimize mix</Button>}
           </>
         }
       />
-      <NewScenarioDialog open={newOpen} onOpenChange={setNewOpen} scenarios={data.scenarios} defaultBase={scenarioId} onCreate={createScenario} />
+      <NewScenarioDialog open={newOpen} onOpenChange={(open) => { setNewOpen(open); if (!open) setNewPreset(null); }} scenarios={data.scenarios} defaultBase={newPreset?.base ?? scenarioId} defaultLabel={newPreset?.label ?? "Simulation"} onCreate={(o) => createScenario({ ...o, volumes: newPreset?.volumes, adjustments: newPreset?.adjustments })} />
       {a.run && scenario && (
         <OptimizeDialog
           open={optOpen}
@@ -131,15 +141,15 @@ function ScenariosPage() {
           data={data}
           run={a.run}
           cur={cur}
-          onApply={(vols) =>
-            createScenario({
-              name: `${scenario.name} — optimized`,
+          onApply={async (vols) => {
+            setNewPreset({
               label: "Simulation",
               base: scenario.id,
               volumes: vols,
-              adjustments: { price: a.run!.adjustments.price, materialCost: a.run!.adjustments.materialCost },
-            })
-          }
+              adjustments: { price: a.run?.adjustments.price, materialCost: a.run?.adjustments.materialCost },
+            });
+            setNewOpen(true);
+          }}
         />
       )}
 
@@ -181,7 +191,7 @@ function ScenariosPage() {
                     </Button>
                   )}
                   {canEdit && (
-                    <Button size="sm" variant="outline" onClick={() => createScenario({ name: `${scenario.name} (copy)`, label: scenario.version_label, base: scenario.id })}>
+                    <Button size="sm" variant="outline" onClick={() => { setNewPreset({ label: scenario.version_label, base: scenario.id }); setNewOpen(true); }}>
                       <Copy className="mr-1 h-4 w-4" /> Duplicate
                     </Button>
                   )}
@@ -704,20 +714,27 @@ function NewScenarioDialog({
   onOpenChange,
   scenarios,
   defaultBase,
+  defaultLabel,
   onCreate,
 }: {
   open: boolean;
   onOpenChange: (o: boolean) => void;
   scenarios: { id: string; name: string }[];
   defaultBase: string | null;
-  onCreate: (o: { name: string; label: string; base: string | null }) => Promise<unknown>;
+  defaultLabel: string;
+  onCreate: (o: { name: string; label: string; base: string | null }) => Promise<boolean>;
 }) {
   const [name, setName] = useState("");
   const [label, setLabel] = useState<string>("Simulation");
   const [base, setBase] = useState<string>("none");
+  const [busy, setBusy] = useState(false);
   useEffect(() => {
-    if (open) setBase(defaultBase ?? "none");
-  }, [open, defaultBase]);
+    if (open) {
+      setBase(defaultBase ?? "none");
+      setLabel(defaultLabel);
+      setName("");
+    }
+  }, [open, defaultBase, defaultLabel]);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -729,10 +746,16 @@ function NewScenarioDialog({
           className="space-y-4"
           onSubmit={async (e) => {
             e.preventDefault();
-            if (!name.trim()) return;
-            await onCreate({ name: name.trim(), label, base: base === "none" ? null : base });
-            onOpenChange(false);
-            setName("");
+            if (!name.trim() || busy) return;
+            setBusy(true);
+            try {
+              if (await onCreate({ name: name.trim(), label, base: base === "none" ? null : base })) {
+                onOpenChange(false);
+                setName("");
+              }
+            } finally {
+              setBusy(false);
+            }
           }}
         >
           <Labeled label="Name"><Input value={name} onChange={(e) => setName(e.target.value)} required autoFocus /></Labeled>
@@ -751,7 +774,7 @@ function NewScenarioDialog({
               </SelectContent>
             </Select>
           </Labeled>
-          <DialogFooter><Button type="submit" disabled={!name.trim()}>Create</Button></DialogFooter>
+          <DialogFooter><Button type="submit" disabled={!name.trim() || busy}><Save className="mr-1 h-4 w-4" />{busy ? "Saving…" : "Save scenario"}</Button></DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

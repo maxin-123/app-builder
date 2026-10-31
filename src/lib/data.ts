@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { toModel, scenarioInputs, type CompanyData } from "./modelAdapter";
+import { savedScenarioOptions } from "./scenario-options";
 import {
   applyScenario,
   evaluate,
@@ -73,7 +74,7 @@ export function useCompanyData() {
         must(supabase.from("scenarios").select("*").order("created_at")),
         must(supabase.from("scenario_inputs").select("*")),
       ]);
-      return { groups, machines, products, materials, bom, routings, scenarios, inputs };
+      return { groups, machines, products, materials, bom, routings, scenarios: savedScenarioOptions(scenarios, inputs), inputs };
     },
   });
 }
