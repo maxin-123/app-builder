@@ -15,6 +15,7 @@ import { optimizeMix, sensitivity, ModelError, type Optimization, type Scenario 
 import { money, num, pct, signedMoney } from "@/lib/format";
 import { EditCell, nonNegative, required } from "@/components/EditCell";
 import { useConfirm } from "@/components/confirm";
+import { ChangedFields } from "@/components/ChangedFields";
 import { Empty, InfeasibleBanner, IssuesPanel, Loading, PageHeader, Panel, ShiftBadge, Th, Variance, Warnings } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -686,24 +687,6 @@ function HistoryTab({ scenario, input }: { scenario: Tables<"scenarios">; input:
         ))}
       </ol>
     </Panel>
-  );
-}
-
-export function ChangedFields({ before, after }: { before: Json | null; after: Json | null }) {
-  if (!before || !after || typeof before !== "object" || typeof after !== "object") return null;
-  const b = before as Record<string, Json>;
-  const n = after as Record<string, Json>;
-  const keys = Object.keys(n).filter((k) => k !== "updated_at" && JSON.stringify(b[k]) !== JSON.stringify(n[k]));
-  if (!keys.length) return null;
-  return (
-    <div className="w-full space-y-1 text-xs">
-      {keys.map((k) => (
-        <div key={k} className="grid grid-cols-[120px_1fr] gap-2">
-          <span className="text-muted-foreground">{k}</span>
-          <span className="break-all font-mono"><span className="text-negative line-through">{JSON.stringify(b[k])}</span> → <span className="text-positive">{JSON.stringify(n[k])}</span></span>
-        </div>
-      ))}
-    </div>
   );
 }
 
