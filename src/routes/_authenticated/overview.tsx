@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import type { ProductResult } from "@/lib/profitVelocityEngine";
 
 export const Route = createFileRoute("/_authenticated/overview")({
-  head: () => ({ meta: [{ title: "Overview — AndaFlows" }, { name: "description", content: "Profit, throughput and your bottleneck at a glance." }] }),
+  head: () => ({ meta: [{ title: "Overview — AndaFlows" }, { name: "description", content: "Profit, throughput and your bottleneck at a glance." }, { property: "og:title", content: "Overview — AndaFlows" }, { property: "og:description", content: "Profit, throughput and your bottleneck at a glance." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Overview,
 });
 

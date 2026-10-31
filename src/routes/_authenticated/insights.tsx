@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const Route = createFileRoute("/_authenticated/insights")({
-  head: () => ({ meta: [{ title: "Insights — AndaFlows" }, { name: "description", content: "Profit bridge, variance, trend and contribution by product." }] }),
+  head: () => ({ meta: [{ title: "Insights — AndaFlows" }, { name: "description", content: "Profit bridge, variance, trend and contribution by product." }, { property: "og:title", content: "Insights — AndaFlows" }, { property: "og:description", content: "Profit bridge, variance, trend and contribution by product." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Insights,
 });
 

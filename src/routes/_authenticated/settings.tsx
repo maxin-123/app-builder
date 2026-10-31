@@ -23,7 +23,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/settings")({
-  head: () => ({ meta: [{ title: "Settings — AndaFlows" }, { name: "description", content: "Company, users and audit log." }] }),
+  head: () => ({ meta: [{ title: "Settings — AndaFlows" }, { name: "description", content: "Company, users and audit log." }, { property: "og:title", content: "Settings — AndaFlows" }, { property: "og:description", content: "Company, users and audit log." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Settings,
 });
 

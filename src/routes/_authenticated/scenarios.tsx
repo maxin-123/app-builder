@@ -37,7 +37,7 @@ export const Route = createFileRoute("/_authenticated/scenarios")({
     tab: ["workspace", "compare", "sensitivity", "history"].includes(String(s.tab)) ? (s.tab as Tab) : undefined,
     action: s.action === "new" || s.action === "optimize" ? s.action : undefined,
   }),
-  head: () => ({ meta: [{ title: "Scenarios — AndaFlows" }, { name: "description", content: "Model price, cost, volume and mix changes and see the profit impact live." }] }),
+  head: () => ({ meta: [{ title: "Scenarios — AndaFlows" }, { name: "description", content: "Model price, cost, volume and mix changes and see the profit impact live." }, { property: "og:title", content: "Scenarios — AndaFlows" }, { property: "og:description", content: "Model price, cost, volume and mix changes and see the profit impact live." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: ScenariosPage,
 });
 

@@ -21,7 +21,7 @@ import type { CompanyData } from "@/lib/modelAdapter";
 import type { Evaluation } from "@/lib/profitVelocityEngine";
 
 export const Route = createFileRoute("/_authenticated/products")({
-  head: () => ({ meta: [{ title: "Products & Constraint — AndaFlows" }, { name: "description", content: "Products, machine groups, routings and bill of materials." }] }),
+  head: () => ({ meta: [{ title: "Products & Constraint — AndaFlows" }, { name: "description", content: "Products, machine groups, routings and bill of materials." }, { property: "og:title", content: "Products & Constraint — AndaFlows" }, { property: "og:description", content: "Products, machine groups, routings and bill of materials." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: ProductsPage,
 });
 

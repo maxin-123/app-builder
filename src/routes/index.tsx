@@ -8,8 +8,7 @@ export const Route = createFileRoute("/")({
       { title: "AndaFlows — Profit Velocity for manufacturers" },
       { name: "description", content: "Decide what to produce by throughput earned per bottleneck hour." },
       { property: "og:title", content: "AndaFlows — Profit Velocity for manufacturers" },
-      { property: "og:description", content: "Decide what to produce by throughput earned per bottleneck hour." },
-    ],
+      { property: "og:description", content: "Decide what to produce by throughput earned per bottleneck hour." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }],
   }),
   component: Index,
 });
