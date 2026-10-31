@@ -39,3 +39,12 @@ export function exportCsv(filename: string, rows: Array<Record<string, string | 
   URL.revokeObjectURL(url);
   void supabase.rpc("log_event", { _action: "EXPORT", _details: { file: filename } });
 }
+
+/** Download rows as an Excel workbook (one sheet per entry) and record the export. */
+export async function exportXlsx(filename: string, sheets: Record<string, Array<Record<string, string | number | null | undefined>>>) {
+  const XLSX = await import("xlsx");
+  const wb = XLSX.utils.book_new();
+  for (const [name, rows] of Object.entries(sheets)) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), name.slice(0, 31));
+  XLSX.writeFile(wb, filename);
+  void supabase.rpc("log_event", { _action: "EXPORT", _details: { file: filename } });
+}

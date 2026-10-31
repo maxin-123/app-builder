@@ -91,14 +91,14 @@ function ProductsTab({ data, ev }: { data: CompanyData; ev: Evaluation | null })
             <TableRow>
               <TableHead className="min-w-[160px]">Product</TableHead>
               <TableHead>Price</TableHead>
-              <TableHead>Material</TableHead>
-              <TableHead>Other T cost</TableHead>
+              <TableHead><Th label="Material" formula="From the BOM when one exists: Σ qty × unitCost × fx × (1 + inflation)" /></TableHead>
+              <TableHead><Th label="Other T cost" formula="Variable cost that reduces throughput (freight, commission)" /></TableHead>
               <TableHead>Other var. cost</TableHead>
               <TableHead>Max demand</TableHead>
-              <TableHead className="text-right">T / unit</TableHead>
+              <TableHead className="text-right"><Th label="T / unit" formula="price − materialCost − otherThroughputCost" /></TableHead>
               <TableHead className="text-right">Constr. min</TableHead>
-              <TableHead className="text-right">Velocity</TableHead>
-              <TableHead className="text-right">Score</TableHead>
+              <TableHead className="text-right"><Th label="Velocity" formula={KPI.velocity.formula} /></TableHead>
+              <TableHead className="text-right"><Th label="Score" formula={KPI.score.formula} /></TableHead>
               <TableHead className="text-right">Rank</TableHead>
               {canEdit && <TableHead />}
             </TableRow>
