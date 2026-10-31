@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
-import { AlertTriangle, ArrowRight, Info, Pin } from "lucide-react";
+import { AlertTriangle, ArrowRight, HelpCircle, Info, Pin } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { ConstraintInfo } from "@/lib/profitVelocityEngine";
 import { pct } from "@/lib/format";
@@ -30,10 +32,34 @@ export function Panel({ title, action, children, className }: { title?: string; 
   );
 }
 
-export function Kpi({ label, value, delta, hint }: { label: string; value: string; delta?: { value: number; text: string } | null; hint?: string }) {
+export function InfoTip({ children, label }: { children: ReactNode; label: string }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger aria-label={`How ${label} is calculated`} className="inline-flex rounded text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <HelpCircle className="h-3.5 w-3.5" />
+      </TooltipTrigger>
+      <TooltipContent className="max-w-xs text-xs">{children}</TooltipContent>
+    </Tooltip>
+  );
+}
+
+/** Column header / label with a formula tooltip. */
+export function Th({ label, formula }: { label: string; formula?: string }) {
+  return (
+    <span className="inline-flex items-center gap-1">
+      {label}
+      {formula && <InfoTip label={label}>{formula}</InfoTip>}
+    </span>
+  );
+}
+
+export function Kpi({ label, value, delta, hint, formula }: { label: string; value: string; delta?: { value: number; text: string } | null; hint?: string; formula?: string }) {
   return (
     <div className="rounded-lg border bg-card p-4 shadow-card">
-      <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        {label}
+        {formula && <InfoTip label={label}>{formula}</InfoTip>}
+      </div>
       <div className="tabular mt-2 text-2xl font-semibold tracking-tight">{value}</div>
       {delta && <Variance value={delta.value} text={delta.text} className="mt-1 text-xs" />}
       {hint && <div className="mt-1 text-xs text-muted-foreground">{hint}</div>}
@@ -107,5 +133,37 @@ export function IssuesPanel({ issues }: { issues: string[] }) {
 }
 
 export function Loading() {
-  return <div className="py-16 text-center text-sm text-muted-foreground">Loading…</div>;
+  return (
+    <div className="space-y-6" aria-busy="true" aria-label="Loading">
+      <Skeleton className="h-8 w-56" />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-24" />)}
+      </div>
+      <Skeleton className="h-64" />
+    </div>
+  );
+}
+
+export function Empty({ title, description, action }: { title: string; description?: string; action?: ReactNode }) {
+  return (
+    <div className="rounded-lg border border-dashed bg-card p-8 text-center">
+      <p className="text-sm font-medium">{title}</p>
+      {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
+      {action && <div className="mt-4 flex justify-center">{action}</div>}
+    </div>
+  );
+}
+
+/** Prominent banner when the engine says the plan doesn't fit capacity. */
+export function InfeasibleBanner({ feasible }: { feasible: boolean }) {
+  if (feasible) return null;
+  return (
+    <div role="alert" className="mb-6 flex gap-3 rounded-lg border border-negative bg-negative-soft p-4 text-sm">
+      <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-negative" />
+      <div>
+        <p className="font-semibold text-negative">This plan is not achievable as planned</p>
+        <p className="mt-0.5 text-foreground">At least one machine group is loaded above its capacity, so the profit shown can't be reached.</p>
+      </div>
+    </div>
+  );
 }
