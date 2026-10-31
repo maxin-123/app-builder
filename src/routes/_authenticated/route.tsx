@@ -4,6 +4,8 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { ScenarioProvider } from "@/lib/scenario-context";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { ConfirmProvider } from "@/components/confirm";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -17,6 +19,8 @@ export const Route = createFileRoute("/_authenticated")({
 function Layout() {
   return (
     <ScenarioProvider>
+      <TooltipProvider delayDuration={200}>
+      <ConfirmProvider>
       <SidebarProvider>
         <div className="flex min-h-screen w-full bg-background">
           <AppSidebar />
@@ -28,6 +32,8 @@ function Layout() {
           </SidebarInset>
         </div>
       </SidebarProvider>
+      </ConfirmProvider>
+      </TooltipProvider>
     </ScenarioProvider>
   );
 }

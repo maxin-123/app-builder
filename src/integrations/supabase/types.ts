@@ -54,6 +54,7 @@ export type Database = {
         Row: {
           created_at: string
           currency: string
+          fiscal_year_start: number
           id: string
           name: string
           updated_at: string
@@ -61,6 +62,7 @@ export type Database = {
         Insert: {
           created_at?: string
           currency?: string
+          fiscal_year_start?: number
           id?: string
           name: string
           updated_at?: string
@@ -68,6 +70,7 @@ export type Database = {
         Update: {
           created_at?: string
           currency?: string
+          fiscal_year_start?: number
           id?: string
           name?: string
           updated_at?: string
@@ -345,6 +348,7 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          is_active: boolean
           updated_at: string
           user_id: string
         }
@@ -354,6 +358,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          is_active?: boolean
           updated_at?: string
           user_id: string
         }
@@ -363,6 +368,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          is_active?: boolean
           updated_at?: string
           user_id?: string
         }
