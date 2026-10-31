@@ -58,7 +58,7 @@ function CompanyTab() {
     toast.success("Saved");
     qc.invalidateQueries({ queryKey: ["me"] });
   };
-  const c = me!.company as typeof me.company & { fiscal_year_start?: number };
+  const c = me!.company;
   return (
     <Panel title="Company">
       <div className="grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3">
