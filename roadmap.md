@@ -1,5 +1,7 @@
 # AndaFlows roadmap
 
+- [ ] Review RLS with a normal-user cross-company read
+- [ ] Only include named, saved scenarios in scenario options
 - [x] Schema, roles, company isolation, locks, audit (database)
 - [x] App shell, auth pages, six screens (first pass)
 - [x] Seed data exactly per spec (CNC Machining / Assembly, products A/B/C, 4 scenarios)
