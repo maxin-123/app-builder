@@ -20,6 +20,7 @@ import { Route as AuthenticatedProductsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedScenariosRouteImport } from './routes/_authenticated/scenarios'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedStatementsRouteImport } from './routes/_authenticated/statements'
+import { Route as AuthenticatedDevEngineRouteImport } from './routes/_authenticated/dev.engine'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -75,6 +76,11 @@ const AuthenticatedStatementsRoute = AuthenticatedStatementsRouteImport.update({
   path: '/statements',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDevEngineRoute = AuthenticatedDevEngineRouteImport.update({
+  id: '/dev/engine',
+  path: '/dev/engine',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/scenarios': typeof AuthenticatedScenariosRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/statements': typeof AuthenticatedStatementsRoute
+  '/dev/engine': typeof AuthenticatedDevEngineRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/scenarios': typeof AuthenticatedScenariosRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/statements': typeof AuthenticatedStatementsRoute
+  '/dev/engine': typeof AuthenticatedDevEngineRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/_authenticated/scenarios': typeof AuthenticatedScenariosRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/statements': typeof AuthenticatedStatementsRoute
+  '/_authenticated/dev/engine': typeof AuthenticatedDevEngineRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/scenarios'
     | '/settings'
     | '/statements'
+    | '/dev/engine'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/scenarios'
     | '/settings'
     | '/statements'
+    | '/dev/engine'
   id:
     | '__root__'
     | '/'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/_authenticated/scenarios'
     | '/_authenticated/settings'
     | '/_authenticated/statements'
+    | '/_authenticated/dev/engine'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -241,6 +253,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStatementsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dev/engine': {
+      id: '/_authenticated/dev/engine'
+      path: '/dev/engine'
+      fullPath: '/dev/engine'
+      preLoaderRoute: typeof AuthenticatedDevEngineRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -251,6 +270,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedScenariosRoute: typeof AuthenticatedScenariosRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedStatementsRoute: typeof AuthenticatedStatementsRoute
+  AuthenticatedDevEngineRoute: typeof AuthenticatedDevEngineRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -260,6 +280,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedScenariosRoute: AuthenticatedScenariosRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedStatementsRoute: AuthenticatedStatementsRoute,
+  AuthenticatedDevEngineRoute: AuthenticatedDevEngineRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
