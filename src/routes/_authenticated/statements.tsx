@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Fragment, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, Download, FileSpreadsheet } from "lucide-react";
-import { analyzeScenario, runScenario, useCompanyData, useMe, useScenarioAnalysis } from "@/lib/data";
+import { runScenario, useCompanyData, useMe, useScenarioAnalysis } from "@/lib/data";
 import { useScenario } from "@/lib/scenario-context";
 import { exportCsv, exportXlsx, money, signedMoney } from "@/lib/format";
 import { KPI } from "@/lib/kpiDefinitions";
@@ -171,4 +171,3 @@ function StatementTable({ title, lines, ev, cmp, name, cur, className, note }: {
   );
 }
 
-export { analyzeScenario };
