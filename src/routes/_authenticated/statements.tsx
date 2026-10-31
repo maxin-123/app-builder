@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import type { Evaluation, ProductResult } from "@/lib/profitVelocityEngine";
 
 export const Route = createFileRoute("/_authenticated/statements")({
-  head: () => ({ meta: [{ title: "Statements — AndaFlows" }, { name: "description", content: "P&L and cash flow for a scenario with variance and product drill-down." }] }),
+  head: () => ({ meta: [{ title: "Statements — AndaFlows" }, { name: "description", content: "P&L and cash flow for a scenario with variance and product drill-down." }, { property: "og:title", content: "Statements — AndaFlows" }, { property: "og:description", content: "P&L and cash flow for a scenario with variance and product drill-down." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Statements,
 });
 

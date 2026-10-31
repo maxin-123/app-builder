@@ -10,6 +10,7 @@
 <!-- LOVABLE:END -->
 
 ## Project rules
+- Filter scenario options centrally after loading persisted rows and matching saved inputs — why: every picker must exclude incomplete saves and unnamed drafts.
 - All business math lives in `src/lib/profitVelocityEngine.ts` (user-owned; never edit). Components only call its functions and render results — why: one source of truth for Profit Velocity.
 - Database rows become the engine `Model` only in `src/lib/modelAdapter.ts` — why: one place to change when the schema changes.
 - The constraint is always a machine group; machines only supply capacity — why: core modelling rule from the product owner.

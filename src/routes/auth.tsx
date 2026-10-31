@@ -14,8 +14,7 @@ export const Route = createFileRoute("/auth")({
       { title: "Sign in — AndaFlows" },
       { name: "description", content: "Sign in to AndaFlows or create your company workspace." },
       { property: "og:title", content: "Sign in — AndaFlows" },
-      { property: "og:description", content: "Sign in to AndaFlows or create your company workspace." },
-    ],
+      { property: "og:description", content: "Sign in to AndaFlows or create your company workspace." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }],
   }),
   component: AuthPage,
 });

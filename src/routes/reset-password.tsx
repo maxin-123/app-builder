@@ -13,8 +13,7 @@ export const Route = createFileRoute("/reset-password")({
       { title: "Set a new password — AndaFlows" },
       { name: "description", content: "Choose a new password for your AndaFlows account." },
       { property: "og:title", content: "Set a new password — AndaFlows" },
-      { property: "og:description", content: "Choose a new password for your AndaFlows account." },
-    ],
+      { property: "og:description", content: "Choose a new password for your AndaFlows account." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }],
   }),
   component: Reset,
 });
