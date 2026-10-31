@@ -91,9 +91,11 @@ export interface ScenarioRun {
   evaluation: Evaluation;
 }
 
-export function runScenario(data: CompanyData, scenarioId: string | null): ScenarioRun {
+export function runScenario(data: CompanyData, scenarioId: string | null, override?: EngineScenario): ScenarioRun {
   const baseModel = toModel(data, scenarioId);
-  const { adjustments, pinnedGroupId } = scenarioInputs(data, scenarioId);
+  const stored = scenarioInputs(data, scenarioId);
+  const adjustments = override ?? stored.adjustments;
+  const pinnedGroupId = stored.pinnedGroupId;
   const model = applyScenario(baseModel, adjustments);
   const evaluation = evaluate(model, { constraintGroupId: pinnedGroupId });
   return { baseModel, adjustments, model, pinnedGroupId, evaluation };
@@ -108,11 +110,15 @@ export interface ScenarioAnalysis {
 }
 
 /** Runs the engine for a scenario and the scenario it is compared against. */
-export function useScenarioAnalysis(data: CompanyData | undefined, scenarioId: string | null): ScenarioAnalysis {
-  return useMemo(() => {
+export function useScenarioAnalysis(data: CompanyData | undefined, scenarioId: string | null, override?: EngineScenario): ScenarioAnalysis {
+  return useMemo(() => analyzeScenario(data, scenarioId, override), [data, scenarioId, override]);
+}
+
+export function analyzeScenario(data: CompanyData | undefined, scenarioId: string | null, override?: EngineScenario): ScenarioAnalysis {
+  {
     if (!data || !scenarioId) return { run: null, compare: null, compareLabel: "", shift: null, issues: [] };
     try {
-      const run = runScenario(data, scenarioId);
+      const run = runScenario(data, scenarioId, override);
       const s = data.scenarios.find((x) => x.id === scenarioId);
       const base = s?.base_scenario_id ? data.scenarios.find((x) => x.id === s.base_scenario_id) : undefined;
       let compare: ScenarioRun;
@@ -133,5 +139,5 @@ export function useScenarioAnalysis(data: CompanyData | undefined, scenarioId: s
       const issues = e instanceof ModelError ? e.issues : [e instanceof Error ? e.message : String(e)];
       return { run: null, compare: null, compareLabel: "", shift: null, issues };
     }
-  }, [data, scenarioId]);
+  }
 }
